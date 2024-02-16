@@ -1,0 +1,49 @@
+{% extends "index.html" %}
+{% load humanize %}
+
+{% block title %}
+<title>Neos Ticaret | Sepet Sayfası</title>
+{% endblock title %}
+
+
+{% block content %}
+<div class="row mt-4">
+
+    {% for sepet in sepetim %}
+        <div class="col-12">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{sepet.product.image.url}}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                        <div class="d-flex justify-content-between ">
+                            <h5 class="card-title">{{sepet.product.name}}</h5>
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name= "sepetId" value="{{sepet.id}}">
+                                <input type="submit" value="" name="remove" class="btn btn-close " >
+                            </form>
+                        </div>
+                            <h5 class="card-title">{{sepet.product.name}}</h5>
+                            <p class="card-text">Ürünün Fiyatı : {{sepet.product.price}} ₺</p>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name= "sepetId" value="{{sepet.id}}">
+                                <input type="number" name="yeniAdet" value="{{sepet.piece}}" id="">
+                                <button type="submit" class="btn btn-primary" name="update">Güncelle</button>
+                            </form>
+                            <p class="card-text">Toplam Fiyat : {{sepet.total_price|intcomma}} ₺</p>
+                            <p class="card-text"><small class="text-body-secondary">Sepete ekleme Tarihi : {{sepet.created_at|naturaltime}} </small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h1>Sepette Ürün Yok</h1>
+    {% endfor %}
+</div>
+{% endblock content %}

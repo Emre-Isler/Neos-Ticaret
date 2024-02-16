@@ -1,0 +1,101 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+    <title>Neos Ticaret</title>
+    {% endblock title %}
+    
+    {% comment %} Bootstrap css {% endcomment %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    {% comment %} 1.Alternatif {% endcomment %}
+    <link rel="stylesheet" href=" {% static 'style.css' %} ">
+    {% comment %} 2.Alternatif {% endcomment %}
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-bs-theme="dark">
+   {% include "partials/_navbar.html" %}
+
+
+    <h1>Hello World</h1>
+    
+    <div class="container">
+
+      {% if messages  %}
+        {% for mesaj in messages %}
+          <div class="alert alert-{{mesaj.tags}} text-center">
+            {{mesaj}}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% block content %}
+
+      <div class="row">
+        {% for i in products %}
+
+        <div class="col-md-4">
+          <div class="card" >
+            {% if i.image %}
+              <img src={{i.image.url}} height = "200px" class="card-img-top">
+            {% else %}
+              <p>Resim Yok</p>
+            {% endif %}
+            
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <p>Satıcı : {{i.owner.username}} </p>
+                <form action="" method = "POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="productId" value="{{i.id}}">
+                  <small>({{i.favorites.all.count}})</small>
+                  <input type="submit" name="fav" 
+                    
+                    {% if request.user in i.favorites.all %}
+                    value="Fav Çıkar" class="btn btn-danger"
+                    {% else %}
+                    value="Fav Ekle" class="btn btn-primary"
+                    {% endif %}
+                     >
+                </form>
+              </div>
+              
+              <h5 class="card-title">{{i.name}}</h5>
+              <p class="card-text">{{i.content|safe}}</p>
+              <p class="card-text">{{i.price}}</p>
+              <p>Kategori : {{i.category.name}}</p>
+              {% for alt in i.sub_category.all %}
+                <small> {{alt.name}} </small>
+              {% endfor %}
+              
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="productId" value="{{i.id}}">
+                <input type="number" name="pieces" value="1" id="">
+                <input type="submit" name="cart" value="Sepete Ekle" class="btn btn-primary">
+              </form>
+              <br>
+              <a href="{% url 'detail' i.id %}" class="btn btn-primary">Ürünü İncele</a>
+
+              <small class="text-capitalize">Tarih : {{i.created_at|naturalday}}</small>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <h2 class="text-center ">Ürün Bulunamadı</h2>
+        {% endfor %}
+      </div>
+      {% endblock content %}
+    </div>
+    
+    <!-- <img src="/static/2.jpg" alt=""> -->
+
+
+    {% comment %} Bootstrap script {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
+

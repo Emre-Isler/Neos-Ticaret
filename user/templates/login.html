@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<form action="" method="POST" class="w-50 m-auto border p-3">
+    {% csrf_token %}
+    <label for="">Kullanıcı Adı</label>
+    <input type="text" name="kullanici" id="" class="form-control">
+    <label for="">Şifre</label>
+    <input type="password" name="sifre" id="" class="form-control">
+    <input type="submit" value="Giriş Yap" class="btn btn-primary ">
+</form>
+
+
+{% endblock content %}
+
+
